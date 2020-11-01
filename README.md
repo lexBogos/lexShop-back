@@ -1,1 +1,1 @@
-# lexBogos-shop-backend
+# lexShop
