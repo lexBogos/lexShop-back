@@ -1,5 +1,5 @@
-import { getProductById } from './src/get-product-by-id.js';
-import { getAllProducts } from './src/get-all-products.js';
+import { getProductById } from './src/handlers/get-product-by-id.js';
+import { getAllProducts } from './src/handlers/get-all-products.js';
 
 export {
   getProductById,
