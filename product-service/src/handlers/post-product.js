@@ -1,18 +1,20 @@
 import { generateResponse } from '../adapters/generate-response';
 import { dataProviderDB } from '../data-providers/data-provider';
 
-export const getProductById = async event => {
+//for now GET method use. Will be fixed
+
+export const postProduct = async event => {
   console.log('Lambda invocation with event: ', event);
   try {
-    const eventProductId = event && event.pathParameters && event.pathParameters.productId;
 
     const dataProvider = dataProviderDB();
-    const product = await dataProvider.getProduct(eventProductId);
-    console.log('Product:', product);
+    //TODO rework event mapper 
+    console.log('queryStringParameters', event.queryStringParameters);
 
-    console.log('Product search result: ', product || 'The product not found');
+    const product = await dataProvider.postProduct(event.queryStringParameters);
+    console.log('Product has been published:', product);
 
-    const response = generateResponse(product, eventProductId);
+    const response = generateResponse(product);
     console.log('Lambda invocation completed with success');
 
     return response;

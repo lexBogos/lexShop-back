@@ -1,11 +1,13 @@
 import { generateResponse } from '../adapters/generate-response';
-import { mockDataProvider } from '../data-providers/mock-data-provider';
+import { dataProviderDB } from '../data-providers/data-provider';
 
 export const getAllProducts = async event => {
   console.log('Lambda invocation with event: ', event);
   try {
 
-    const productList = await mockDataProvider();
+    const dataProvider = dataProviderDB();
+    const productList = await dataProvider.getProducts();
+    console.log('Products:', productList);
 
     const response = generateResponse(productList);
     console.log('Lambda invocation completed with success');

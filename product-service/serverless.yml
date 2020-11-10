@@ -109,4 +109,18 @@ functions:
               -
                 statusCode: '200'
                 responseModels:
-                  "application/json": getProductByIdResponse   
+                  "application/json": getProductByIdResponse
+  
+  postProduct:
+    handler: handler.postProduct
+    events:
+      - http:
+          path: create-products
+          method: get
+  
+  postProductQuantity:
+    handler: handler.postProductQuantity
+    events:
+      - http:
+          path: modify-porduct-quantity
+          method: get              
