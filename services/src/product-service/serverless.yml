@@ -12,7 +12,7 @@ plugins:
 
 custom:
   webpack:
-    webpackConfig: 'webpack.config.js'
+    webpackConfig: '../webpack.config.js'
     includeModules: true
   documentation:
     # this is general info about the API

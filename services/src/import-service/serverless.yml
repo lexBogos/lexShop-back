@@ -1,0 +1,57 @@
+service: import-service
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "s3:ListBucket"
+      Resource:
+        - "arn:aws:s3:::task-5-lex"
+    - Effect: "Allow"
+      Action: 
+        - "s3:*"
+      Resource:
+        - "arn:aws:s3:::task-5-lex/*"
+    # - Effect: 'Allow'
+    #   Action: 'sqs:*'
+    #   Resource:
+    #     - Fn::GetAtt: [SQSQueue, Arn]
+    # - Effect: 'Allow'
+    #   Action: 'sns:*'
+    #   Resource:
+    #     - Fn::GetAtt: SNSTopic
+
+plugins:
+  - serverless-webpack
+  - serverless-aws-documentation
+
+custom:
+  webpack:
+    webpackConfig: '../../webpack.config.js'
+    includeModules: true
+  documentation:
+    # this is general info about the API
+    api:
+      info:
+        version: '2'
+        title: Import-service
+        description: Some example API
+        termsOfService: https://www.google.com
+        contact:
+          name: Alexey Tomashevich
+          url: https://join.skype.com/invite/dS2VsXIdTG4z
+          email: lex.bogos@gmail.com
+        license:
+          name: The license
+          url: https://www.github.com/lexBogos
+functions:
+  importProductFile:
+    handler: handler.importProductsFile
+    events:
+      - http:
+          path: import
+          method: get
