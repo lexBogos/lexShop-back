@@ -55,3 +55,12 @@ functions:
       - http:
           path: import
           method: get
+  catalogParse:
+    handler: handler.catalogParse
+    events:
+      - s3:
+          bucket: task-5-lex
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: productsFiles/
+          existing: true
