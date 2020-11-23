@@ -8,22 +8,56 @@ provider:
 
   iamRoleStatements:
     - Effect: "Allow"
-      Action: "s3:ListBucket"
-      Resource:
-        - "arn:aws:s3:::task-5-lex"
-    - Effect: "Allow"
       Action: 
         - "s3:*"
       Resource:
         - "arn:aws:s3:::task-5-lex/*"
-    # - Effect: 'Allow'
-    #   Action: 'sqs:*'
-    #   Resource:
-    #     - Fn::GetAtt: [SQSQueue, Arn]
-    # - Effect: 'Allow'
-    #   Action: 'sns:*'
-    #   Resource:
-    #     - Fn::GetAtt: SNSTopic
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource:
+        - Fn::GetAtt: [SQSQueue, Arn]
+    - Effect: "Allow"
+      Action: "sns:*"
+      Resource:
+        Ref: SNSTopic
+  
+  environment:
+    SQS_URL:
+      Ref: SQSQueue
+    SNS_ARN:
+      Ref: SNSTopic        
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: "lex-b-queue"
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: lex-b-queue-topic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: handy22candy@gmail.com
+        Protocol: email
+        FilterPolicy:
+          event:
+            - product-published-successful
+        TopicArn:
+          Ref: SNSTopic
+    SNSSubscriptionForFailedPublish: 
+      Type: AWS::SNS::Subscription     
+      Properties: 
+        Endpoint: lex.bogos@gmail.com
+        Protocol: email
+        FilterPolicy:
+          event:
+            - product-published-failed
+        TopicArn:
+          Ref: SNSTopic
+             
 
 plugins:
   - serverless-webpack
@@ -64,3 +98,13 @@ functions:
           rules:
             - prefix: productsFiles/
           existing: true
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - SQSQueue
+              - Arn
+

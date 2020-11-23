@@ -1,5 +1,5 @@
-import { importProductsFile } from './handlers/importProductsFile';
-import { catalogParse } from './handlers/catalogParse';
+import { importProductsFile } from './handlers/import-products-file';
+import { catalogParse } from './handlers/catalog-parse';
 
 export {
   importProductsFile,
