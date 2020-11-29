@@ -1,8 +1,13 @@
 import  AWS  from 'aws-sdk';
 const BUCKET = 'task-5-lex';
+import {
+  lambdaLogger
+} from '../../utils/lambda-logger';
+
+const logger = lambdaLogger();
 
 export const importProductsFile = async event => {
-  console.log('Lambda invocation with event: ', event);
+  logger.log('Lambda invocation with event: ', event);
   const productsName = event.queryStringParameters.name;
   const productsPath = `productsFiles/${productsName}`;
 
@@ -18,7 +23,7 @@ export const importProductsFile = async event => {
       if (error) {
         return reject(error);
       }
-      console.log(url);
+      logger.log('url', url);
 
       resolve({
         statusCode: 200,
@@ -26,6 +31,6 @@ export const importProductsFile = async event => {
         body: url
       })
     })
-    console.log('Lambda invocation completed with success');
+    logger.log('Lambda invocation completed with success');
   })
 };
