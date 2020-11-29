@@ -25,7 +25,7 @@ provider:
     SQS_URL:
       Ref: SQSQueue
     SNS_ARN:
-      Ref: SNSTopic        
+      Ref: SNSTopic
 
 resources:
   Resources:
@@ -56,7 +56,41 @@ resources:
           event:
             - product-published-failed
         TopicArn:
-          Ref: SNSTopic
+          Ref: SNSTopic          
+    GatewayResponseAccessDenied:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: 'ACCESS_DENIED'
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'POST, GET, OPTIONS, PUT'"
+    GatewayResponseUnauthorized:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: 'UNAUTHORIZED'
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'POST, GET, OPTIONS, PUT'"
+    MissingAuthToken:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: 'MISSING_AUTHENTICATION_TOKEN'
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'POST, GET, OPTIONS, PUT'"
+            
              
 
 plugins:
@@ -89,6 +123,12 @@ functions:
       - http:
           path: import
           method: get
+          authorizer:
+              name: 'basicAuthorizer'
+              type: 'token'
+              arn: '${cf:authorization-service-${self:provider.stage}.basicAuthorizerArn}'
+              resultTtlInSeconds: 0
+              identitySource: 'method.request.header.Authorization'
   catalogParse:
     handler: handler.catalogParse
     events:

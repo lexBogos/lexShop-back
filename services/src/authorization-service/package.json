@@ -1,0 +1,26 @@
+{
+  "name": "authorization-service",
+  "version": "1.0.0",
+  "description": "Authorization-service (API based)",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "get-swagger-documentation": "serverless downloadDocumentation --outputFileName=swagger.ext",
+    "deploy": "sls deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.792.0",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "serverless-aws-documentation": "^1.1.0",
+    "serverless-webpack": "^5.3.5",
+    "webpack": "^4.44.1",
+    "webpack-node-externals": "^2.5.0"
+  }
+}
