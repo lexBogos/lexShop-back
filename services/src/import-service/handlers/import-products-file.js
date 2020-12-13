@@ -1,4 +1,4 @@
-import  AWS  from 'aws-sdk';
+import AWS from 'aws-sdk';
 const BUCKET = 'task-5-lex';
 import {
   lambdaLogger
@@ -11,15 +11,17 @@ export const importProductsFile = async event => {
   const productsName = event.queryStringParameters.name;
   const productsPath = `productsFiles/${productsName}`;
 
-  const s3 = new AWS.S3({region: 'eu-west-1'});
+  const s3 = new AWS.S3({
+    region: 'eu-west-1'
+  });
   const params = {
     Bucket: BUCKET,
     Key: productsPath,
     Expires: 60,
   }
 
-    return new Promise((resolve, reject)=>{ 
-      s3.getSignedUrl('putObject', params, (error, url)=>{
+  return new Promise((resolve, reject) => {
+    s3.getSignedUrl('putObject', params, (error, url) => {
       if (error) {
         return reject(error);
       }
@@ -27,7 +29,11 @@ export const importProductsFile = async event => {
 
       resolve({
         statusCode: 200,
-        headers: {"Access-Control-Allow-Origin": "*" },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Headers': '*',
+        },
         body: url
       })
     })

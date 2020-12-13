@@ -1,2 +1,3 @@
 # lexShop-back
 DB
+AUTHORISATION
